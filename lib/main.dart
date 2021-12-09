@@ -1,274 +1,294 @@
 import 'package:flutter/material.dart';
 
-//App's entry point
-void main() => runApp(const ContactProfile());
+void main() => runApp(ContactProfile());
 
-class ContactProfile extends
-    StatelessWidget {
+//NEW CODE: Separate class to store themes
+class MyAppThemes {
+  //Method to provide light theme
+  static ThemeData appThemeLight() {
+    return ThemeData(
+      // Define the default brightness and colors for the overall app.
+      brightness: Brightness.light,
+
+      //Theme for app bar
+      appBarTheme: const AppBarTheme(
+        //AppBar's color
+        color: Colors.white,
+        //Theme for AppBar's icons
+        iconTheme: IconThemeData(
+
+          //Dark color icons on light colored background
+          color: Colors.black,
+        ),
+      ),
+
+      //Theme for app's icons
+      iconTheme: IconThemeData(
+        color: Colors.indigo.shade800,
+      ),
+    );
+  }
+}
+
+class ContactProfile extends StatelessWidget {
   const ContactProfile({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+
+      //Applying theme to app calling MyAppThemes's method
+      theme: MyAppThemes.appThemeLight(),
+
       home: Scaffold(
-        appBar: AppBar(
-          //Adding background color to AppBar
-          backgroundColor: Colors.white,
-          //Adding back arrow for leading property.
-          //Back arrow appears at the top-left of AppBar
-          leading: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-          actions: <Widget>[
-            //Adding Star icon for favoring the contact.
-            //This IconButton responds to user's tap,
-            //and prints the message.
-            IconButton(
-              icon: const Icon(Icons.star_border),
-              color: Colors.black,
-              onPressed: () {
-                print("Contact is starred");
-              },
-            ),
-          ]
-        ),
-        //NEW CODE: Added container
-        body: ListView (
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                //Container for adding Profile picture
-                SizedBox(
-                  //Container is stretched horizontally
-                  width: double.infinity,
-                  //Image is fetched from assets folder use Image.network
-                  //to fetch with url, "https:..."
-                  child: Image.asset(
-                      'assets/images/altumcode-unsplash.jpg'),
-                  height: 320,
-                ),
-                //NEW CODE: Adding Display Name
-                SizedBox(
-                  height: 60,
-                  child: Row(
-                    //Aligning text to the start of the widget
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: const <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          "Simon Vargas",
-                          style: TextStyle(fontSize: 30),
-                        )
-                      )
-                    ],
-                  ),
-                ),
-                //NEW CODE: Adding Divider below the display name
-                const Divider(
-                  color: Colors.grey,
-                ),
-                //NEW CODE: Container for action items
-                Container(
-                  margin: const EdgeInsets.only(top: 8, bottom: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      //"Call" action item
-                      buildCallButton(),
+        //Creating app bar
+        appBar: buildAppBarWidget(),
 
-                      //"Text" action item
-                      buildTextButton(),
-
-                      //"Video" action item
-                      buildVideoCallButton(),
-
-                      //"Email" action item
-                      buildEmailButton(),
-
-                      //"Directions" action item
-                      buildDirectionsButton(),
-
-                      //"Pay" action item
-                      buildPayButton(),
-                    ],
-                  ),
-                ),
-                //NEW CODE: Adding Divider
-                const Divider(
-                  color: Colors.grey,
-                ),
-                //NEW CODE: Adding contact's phone numbers
-                mobilePhoneListTile(),
-                otherPhoneListTile(),
-
-                //NEW CODE: Adding 'Divider' widget
-                const Divider(
-                  color: Colors.grey,
-                ),
-
-                //Adding email list
-                emailListTile(),
-
-                //Adding Divider
-                const Divider(
-                  color: Colors.grey,
-                ),
-
-                //Adding address tile
-                addressListTile(),
-              ],
-            )
-          ]
-        )
+        //Creating body part of the app
+        body: buildBodyWidget(),
       ),
     );
   }
-  //Adding "Call" action item
+
+  //Provides app bar implementation
+   buildAppBarWidget() {
+    return AppBar(
+      leading: const Icon(
+        Icons.arrow_back,
+      ),
+      actions: <Widget>[
+        IconButton(
+          icon: const Icon(Icons.star_border),
+          onPressed: () {
+            print("Contact is starred");
+          },
+        ),
+      ],
+    );
+  }
+
+  //Provides body for the app
+  Widget buildBodyWidget() {
+    return ListView(
+      children: <Widget>[
+        Column(
+          children: <Widget>[
+            Container(
+              width: double.infinity,
+              height: 250,
+              child: Image.network(
+                "https://github.com/ptyagicodecamp/educative_flutter/raw/profile_1/assets/profile.jpg?raw=true",
+                height: 250,
+                fit: BoxFit.cover,
+              ),
+            ),
+            SizedBox(
+              height: 60,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: const <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "Priyanka Tyagi",
+                      style: TextStyle(fontSize: 30),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(
+              color: Colors.grey,
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 8, bottom: 8),
+              child: profileActionItems(),
+            ),
+            const Divider(
+              color: Colors.grey,
+            ),
+            mobilePhoneListTile(),
+            otherPhoneListTile(),
+            const Divider(
+              color: Colors.grey,
+            ),
+            emailListTile(),
+            const Divider(
+              color: Colors.grey,
+            ),
+            addressListTile(),
+          ],
+        ),
+      ],
+    );
+  }
+
+  //Builds custom action items widget
+  Widget profileActionItems() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        buildCallButton(),
+        buildTextButton(),
+        buildVideoCallButton(),
+        buildEmailButton(),
+        buildDirectionsButton(),
+        buildPayButton(),
+      ],
+    );
+  }
+
+  //Call button of action item widget
   Widget buildCallButton() {
     return Column(
       children: <Widget>[
         IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.call,
-            color: Colors.indigo.shade800,
           ),
           onPressed: () {},
         ),
-        const Text("Call"),
+        Text("Call"),
       ],
     );
   }
 
-  //Adding "Text" action item
+  //Text button of action item widget
   Widget buildTextButton() {
     return Column(
       children: <Widget>[
         IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.message,
-            color: Colors.indigo.shade800,
           ),
           onPressed: () {},
         ),
-        const Text("Text"),
+        Text("Text"),
       ],
     );
   }
-  //Adding "Video" action item
+
+  //Video button of action item widget
   Widget buildVideoCallButton() {
     return Column(
       children: <Widget>[
         IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.video_call,
-            color: Colors.indigo.shade800,
           ),
           onPressed: () {},
         ),
-        const Text("Video"),
+        Text("Video"),
       ],
     );
   }
-  //Adding "Email" action item
+
+  //Email button of action item widget
   Widget buildEmailButton() {
     return Column(
       children: <Widget>[
         IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.email,
-            color: Colors.indigo.shade800,
           ),
           onPressed: () {},
         ),
-        const Text("Email")
+        Text("Email"),
       ],
     );
   }
-  //Adding "Directions" action item
+
+  //Directions button of action item widget
   Widget buildDirectionsButton() {
     return Column(
       children: <Widget>[
         IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.directions,
-            color: Colors.indigo.shade800,
           ),
           onPressed: () {},
         ),
-        const Text("Directions")
+        const Text("Directions"),
       ],
     );
   }
-  //Adding "Pay" action item
+
+  //Pay button of action item widget
   Widget buildPayButton() {
     return Column(
       children: <Widget>[
         IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.attach_money,
-            color: Colors.indigo.shade800,
           ),
           onPressed: () {},
         ),
-        const Text("Pay")
+        const Text("Pay"),
       ],
     );
   }
 
-  //NEW CODE: Adding "Mobile phone number" item
+  //Builds widget for mobile phone number
   Widget mobilePhoneListTile() {
     return ListTile(
-      leading: const Icon(Icons.call),
+      leading: const Icon(
+        Icons.call,
+        color: Colors.grey,
+      ),
       title: const Text("330-803-3390"),
       subtitle: const Text("mobile"),
       trailing: IconButton(
-        icon: const Icon(Icons.message),
-        color: Colors.indigo.shade500,
+        icon: const Icon(
+          Icons.message,
+        ),
         onPressed: () {},
       ),
     );
   }
 
-  //Adding "Other Phone Number" item
+  //Builds widget for other phone number
   Widget otherPhoneListTile() {
     return ListTile(
       leading: const Text(""),
-      title: const Text("440-44-3390"),
+      title: const Text("440-440-3390"),
       subtitle: const Text("other"),
       trailing: IconButton(
-        icon: const Icon(Icons.message),
-        color: Colors.indigo.shade500,
+        icon: const Icon(
+          Icons.message,
+        ),
         onPressed: () {},
-    ),
+      ),
     );
-
   }
-  //Adding "email list" item
+
+  //Builds email address widget
   Widget emailListTile() {
-    return  const ListTile(
-      leading: Icon(Icons.email),
-      title: Text("vargas@vargas.com"),
+    return const ListTile(
+      leading: Icon(
+        Icons.email,
+        color: Colors.grey,
+      ),
+      title: Text("priyanka@priyanka.com"),
       subtitle: Text("work"),
     );
   }
 
-  //Adding "address" item
+  //Builds home address widget
   Widget addressListTile() {
-    return  ListTile(
-      leading: const Icon(Icons.location_on),
+    return ListTile(
+      leading: const Icon(
+        Icons.location_on,
+        color: Colors.grey,
+      ),
       title: const Text("234 Sunset St, Burlingame"),
       subtitle: const Text("home"),
       trailing: IconButton(
-        icon: const Icon(Icons.directions),
-        color: Colors.indigo.shade500,
+        icon: const Icon(
+          Icons.directions,
+        ),
         onPressed: () {},
       ),
     );
   }
-
-
-
 }
