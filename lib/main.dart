@@ -5,6 +5,30 @@ void main() => runApp(ContactProfile());
 //NEW CODE: Separate class to store themes
 class MyAppThemes {
   //Method to provide light theme
+  static ThemeData appThemeDark() {
+    return ThemeData(
+      // Define the default brightness and colors for the overall app.
+      brightness: Brightness.dark,
+
+      //Theme for app bar
+      appBarTheme: const AppBarTheme(
+        //AppBar's color
+        color: Colors.black,
+        //Theme for AppBar's icons
+        iconTheme: IconThemeData(
+
+          //Dark color icons on light colored background
+          color: Colors.white,
+        ),
+      ),
+
+      //Theme for app's icons
+      iconTheme: const IconThemeData(
+        color: Colors.orange,
+      ),
+    );
+  }
+
   static ThemeData appThemeLight() {
     return ThemeData(
       // Define the default brightness and colors for the overall app.
@@ -39,7 +63,7 @@ class ContactProfile extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
       //Applying theme to app calling MyAppThemes's method
-      theme: MyAppThemes.appThemeLight(),
+      theme: MyAppThemes.appThemeDark(),
 
       home: Scaffold(
         //Creating app bar
